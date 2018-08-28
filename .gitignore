@@ -1,5 +1,11 @@
 # Binaries for programs and plugins
 *.exe
+client_mac
+client_linux
+client_rpi
+server_mac
+server_linux
+server_rpi
 *.exe~
 *.dll
 *.so

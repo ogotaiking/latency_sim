@@ -3,7 +3,10 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 func greet(w http.ResponseWriter, r *http.Request) {
@@ -11,7 +14,32 @@ func greet(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello World! %s", time.Now())
 }
 
+func TestTraffic(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	w.WriteHeader(http.StatusOK)
+
+	if _l, ok := vars["latency"]; ok {
+
+		latency, _ := strconv.ParseInt(_l, 10, 64)
+		//fmt.Fprintf(w, "sleeping.........%d\n\n\n", latency)
+		time.Sleep(time.Duration(latency) * time.Millisecond)
+	}
+
+	if s, ok := vars["size"]; ok {
+		size, _ := strconv.ParseInt(s, 10, 64)
+		size = size * 512
+		a := make([]byte, size, size)
+		fmt.Fprintf(w, "%b", a)
+	}
+
+	//fmt.Fprintf(w, "size: %v\n", vars["size"])
+	//fmt.Fprintf(w, "latency: %v\n", vars["latency"])
+}
+
 func main() {
-	http.HandleFunc("/", greet)
-	http.ListenAndServe(":8080", nil)
+
+	r := mux.NewRouter()
+	r.HandleFunc("/test/{size}/{latency}", TestTraffic)
+	http.Handle("/", r)
+	http.ListenAndServe("0.0.0.0:8080", nil)
 }
