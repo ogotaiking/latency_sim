@@ -9,6 +9,13 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var a []byte
+
+func init() {
+	const maxsize int = 1024 * 1024 * 1024
+	a = make([]byte, maxsize, maxsize)
+}
+
 func greet(w http.ResponseWriter, r *http.Request) {
 	time.Sleep(1000 * time.Millisecond)
 	fmt.Fprintf(w, "Hello World! %s", time.Now())
@@ -28,8 +35,7 @@ func TestTraffic(w http.ResponseWriter, r *http.Request) {
 	if s, ok := vars["size"]; ok {
 		size, _ := strconv.ParseInt(s, 10, 64)
 		size = size * 512
-		a := make([]byte, size, size)
-		fmt.Fprintf(w, "%b", a)
+		fmt.Fprintf(w, "%b", a[:size])
 	}
 
 	//fmt.Fprintf(w, "size: %v\n", vars["size"])

@@ -12,9 +12,14 @@ import (
 )
 
 func HTTPClient(host string, latency int, size int, tick int) {
+	rand.Seed(time.Now().UnixNano())
+
 	for {
 		tc := time.After(time.Microsecond * time.Duration(tick*1000))
-		url := fmt.Sprintf("http://%s/test/%d/%d", host, size, latency)
+		ratio := (float32(rand.Int31n(100))) / float32(100)
+		sizeR := int(float32(size) * (0.1 + ratio))
+		latency = int(float32(latency) * (0.5 + ratio/2))
+		url := fmt.Sprintf("http://%s/test/%d/%d", host, sizeR, latency)
 		response, err := http.Get(url)
 		if err != nil {
 			log.Fatal(err)
