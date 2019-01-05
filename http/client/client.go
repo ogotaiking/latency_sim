@@ -4,11 +4,12 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"math/rand"
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 func HTTPClient(host string, latency int, size int, tick int) {
@@ -22,16 +23,16 @@ func HTTPClient(host string, latency int, size int, tick int) {
 		url := fmt.Sprintf("http://%s/test/%d/%d", host, sizeR, latency)
 		response, err := http.Get(url)
 		if err != nil {
-			log.Fatal(err)
+			logrus.Warn(err)
 		}
 		if err != nil {
-			log.Fatal(err)
+			logrus.Warn(err)
 		}
 
 		defer response.Body.Close()
 		_, err = ioutil.ReadAll(response.Body)
 		if err != nil {
-			log.Fatal(err)
+			logrus.Warn(err)
 		}
 		<-tc
 	}
