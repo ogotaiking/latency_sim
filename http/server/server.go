@@ -34,7 +34,7 @@ func TestTraffic(w http.ResponseWriter, r *http.Request) {
 
 	if s, ok := vars["size"]; ok {
 		size, _ := strconv.ParseInt(s, 10, 64)
-		size = size * 512
+		size = size * 1024
 		fmt.Fprintf(w, "%b", a[:size])
 	}
 

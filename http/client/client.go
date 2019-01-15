@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"sync"
@@ -23,9 +24,15 @@ func HTTPClient(host string, latency int, size int, tick int) {
 		response, err := http.Get(url)
 		if err != nil {
 			logrus.Warn(err)
+		} else {
+			_, err = ioutil.ReadAll(response.Body)
+                if err != nil {
+                        logrus.Warn(err)
+                }
+			response.Body.Close()
 		}
+
 		<-tc
-		response.Body.Close()
 	}
 
 }
