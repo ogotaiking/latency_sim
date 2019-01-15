@@ -25,16 +25,8 @@ func HTTPClient(host string, latency int, size int, tick int) {
 		if err != nil {
 			logrus.Warn(err)
 		}
-		if err != nil {
-			logrus.Warn(err)
-		}
-
-		defer response.Body.Close()
-		_, err = ioutil.ReadAll(response.Body)
-		if err != nil {
-			logrus.Warn(err)
-		}
 		<-tc
+		response.Body.Close()
 	}
 
 }
